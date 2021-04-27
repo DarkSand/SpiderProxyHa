@@ -31,8 +31,6 @@ SpiderProxyHa可以探测热点target(Pro版本才会支持)，并且提前创�
 
 
 
-
-
 ## 使用
 
 ### 依赖
@@ -46,14 +44,14 @@ SpiderProxyHa可以探测热点target(Pro版本才会支持)，并且提前创�
 
 mac/linux
 ```
-./mvnw -Pprod  clean -Dmaven.test.skip=true package appassembler:assemble
+cd spider-ha-proxy-core & sh mvnw -Pprod  clean -Dmaven.test.skip=true package appassembler:assemble
 ```
 windows
 ```
-mvnw.cmd -Pprod  clean -Dmaven.test.skip=true package appassembler:assemble
+cd spider-ha-proxy-core & mvnw.cmd -Pprod  clean -Dmaven.test.skip=true package appassembler:assemble
 ```
 
-之后得到文件夹:``target/dist-spider-proxy-ha-1.0`` 即为可执行文件
+之后得到文件夹:``spider-ha-proxy-core/target/dist-spider-proxy-ha-1.0`` 即为可执行文件
 
 
 ### 配置
@@ -68,6 +66,13 @@ refreshUpstreamInterval = 30
 cache_connection_size = 3
 # 连接池中缓存的连接时间，太久可能会僵死
 cache_connection_seconds = 30
+cache_connection_seconds = 30
+# lo,private,public,all
+# lo: 127.0.0.1 回环地址,适合单机
+# private: 内网地址,适合同机房
+# public: 外网地址
+# all: 监听0.0.0.0，适合在公网
+listen_type = lo
 
 # 唯一的名称，可以配置多个采购的代理ip源，或者为业务配置独立的ip源。保证各业务ip使用的资源独立
 [source_dly_virjar]
@@ -103,11 +108,11 @@ upstream_auth_password = your_proxy_password
 
 每个端口都会对应一个特定的上游代理ip资源，正常情况下，除非检测到上游ip掉线。否则不会修改mapping关系
 
-## 二开和Pro功能
-本项目开源免费，但是他只是一个基础，还有很多牛逼功能可以做。需要的就主动来找我了(微信 virjar1)
 
-1. 业务API和数据库，可以通过http调用手动修改mapping关系(可以理解为完成ip重播，并且效果是实现秒拨)
-2. MITM，中间人攻击。这是核心功能。可以在SpiderProxyHa层面修改http请求和返回。实现抓取数据返回拦截，js/图片资源注入。甚至可以解决当前SekiroJs跨域问题
-3. 鉴权，目前在SpiderProxyHa层面，没有实现代理的权限模块。
+### 快速上手
 
+1. 用idea打开本项目
+2. 运行upstream-mocker中的UpstreamMocker的main函数(如果是mac系统，可以直接运行脚本:``run_mocker_server.sh``)
+3. 在idea maven profile中，选中dev
+4. 运行：``spider-ha-proxy-core/src/main/java/com/virjar/spider/proxy/ha/HaProxyBootstrap.java``
 
